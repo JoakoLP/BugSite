@@ -15,3 +15,11 @@ export async function POST(request: NextRequest) {
   // devuelve el objeto creado con el status 201(objeto creado)
   return NextResponse.json(newIssue, { status: 201 });
 }
+
+export async function GET(req: NextRequest) {
+  const issues = await prisma.issue.findMany();
+  // .then((res) => {
+  //   console.log(res);
+  // });
+  return NextResponse.json(issues);
+}
