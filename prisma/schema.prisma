@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// configurar el 'provider' en schema.prisma y 'DATABASE_URL' en .env
+// npx prisma init
+// configurar modelos y constantes
+// npx prisma format // ajusta el formato de schema.prisma
+// npx prisma migrate dev // crea la carpeta 'migrations' donde se almacena el schema en SQL
+// dar nombre para la migracion en consola
+
+model Issue {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255) // default = varchar(191)
+  description String   @db.Text
+  status      Status   @default(OPEN)
+  createdAt   DateTime @default(now()) // Current time of issue creation.
+  updatedAt   DateTime @updatedAt // Updates every time the issue is updated.
+}
+
+// enum = Constant values
+enum Status {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
