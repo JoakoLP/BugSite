@@ -21,5 +21,32 @@ export async function GET(req: NextRequest) {
   // .then((res) => {
   //   console.log(res);
   // });
-  return NextResponse.json(issues);
+  return NextResponse.json(issues, { status: 200 });
+}
+
+export async function PUT(req: NextRequest) {
+  const body = await req.json();
+  try {
+    const updatedIssue = await prisma.issue.update({
+      where: { id: body.id },
+      data: { title: body.title, description: body.description },
+    });
+    return NextResponse.json(updatedIssue, { status: 200 });
+  } catch (error) {
+    return NextResponse.json("Issue not found", { status: 404 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  // console.log(req);
+  const body = await req.json();
+  // console.log(body);
+  try {
+    const deletedIssue = await prisma.issue.delete({
+      where: { id: body.id },
+    });
+    return NextResponse.json(deletedIssue, { status: 200 });
+  } catch (error) {
+    return NextResponse.json("Issue not found", { status: 404 });
+  }
 }

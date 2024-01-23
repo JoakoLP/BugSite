@@ -11,6 +11,7 @@ import { createIssueSchema } from "@/app/validationSchemas";
 import { z } from "zod";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
+import { dbFunctions } from "@/app/utils/dbFunctions";
 
 // interface IssueForm {
 //   // interface que especifica los campos y sus tipos dentro del formulario
@@ -42,7 +43,8 @@ const NewIssuePage = () => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setSubmitting(true);
-      await axios.post("/api/issues", data);
+      dbFunctions.postIssue(data);
+      // await axios.post("/api/issues", data);
       setError("");
       router.push("/issues");
       setSubmitting(false);

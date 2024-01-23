@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { FaPlaneDeparture } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import classnames from "classnames";
+import { GoBug } from "react-icons/go";
 
 const NavBar = () => {
   const currentPath = usePathname();
@@ -16,7 +16,7 @@ const NavBar = () => {
   return (
     <nav className="flex w-full space-x-6 border-b mb-5 px-5 h-14 items-center">
       <Link rel="stylesheet" href="/">
-        <FaPlaneDeparture size={20} />
+        <GoBug size={20} />
       </Link>
       <ul className="flex space-x-6">
         {links.map((link) => {
