@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { AlertDialog, Badge, Button, Flex, Table, Text } from "@radix-ui/themes";
+import { Badge, Button, Flex, Table, Text } from "@radix-ui/themes";
 import Link from "next/link";
-import axios from "axios";
-import { GoLock, GoPencil, GoTrash, GoUnlock } from "react-icons/go";
 import { dbFunctions } from "../utils/dbFunctions";
 import DeleteDialog from "./deleteDialog";
 import EditDialog from "./editDialog";
