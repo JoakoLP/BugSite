@@ -44,7 +44,6 @@ const NewIssuePage = () => {
     try {
       setSubmitting(true);
       dbFunctions.postIssue(data);
-      // await axios.post("/api/issues", data);
       setError("");
       router.push("/issues");
       setSubmitting(false);
