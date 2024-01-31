@@ -1,28 +1,33 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { AlertDialog, Button, Flex, Table } from "@radix-ui/themes";
+import { AlertDialog, Badge, Button, Flex, Table, Text } from "@radix-ui/themes";
 import Link from "next/link";
 import axios from "axios";
-import { GoPencil, GoTrash } from "react-icons/go";
+import { GoLock, GoPencil, GoTrash, GoUnlock } from "react-icons/go";
 import { dbFunctions } from "../utils/dbFunctions";
 import DeleteDialog from "./deleteDialog";
+import EditDialog from "./editDialog";
+import CloseIssue from "./closeIssueDialog";
+import Spinner from "../components/Spinner";
+import moment from "moment";
+
+type Issue = {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  createdAt: any;
+  updatedAt: any;
+};
 
 const IssuesPage = () => {
   const [issues, setIssues] = useState([]);
 
-  const getIssues = async () => {
-    await axios.get("/api/issues").then((res) => {
-      // console.log(res);
-      console.log(res.data);
-      setIssues(res.data);
-      // return res.data;
-    });
-  };
-
   useEffect(() => {
-    // getIssues();
     dbFunctions.getIssues(setIssues);
   }, []);
+
+  moment.locale("en");
 
   return (
     <div>
@@ -34,6 +39,7 @@ const IssuesPage = () => {
               <Table.ColumnHeaderCell>Title</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Description</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Open/Close</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Created At</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Updated At</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Edit</Table.ColumnHeaderCell>
@@ -42,29 +48,54 @@ const IssuesPage = () => {
           </Table.Header>
 
           <Table.Body>
-            {issues.map((issue: any) => {
+            {issues.map((issue: Issue) => {
               return (
                 <Table.Row>
-                  <Table.RowHeaderCell>{issue?.id}</Table.RowHeaderCell>
-                  <Table.Cell>{issue?.title}</Table.Cell>
-                  <Table.Cell>{issue?.description}</Table.Cell>
-                  <Table.Cell>{issue?.status}</Table.Cell>
-                  <Table.Cell>{issue?.createdAt}</Table.Cell>
-                  <Table.Cell>{issue?.updatedAt}</Table.Cell>
-                  <Table.Cell>
-                    <Button variant="surface">
-                      <GoPencil />
-                    </Button>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <DeleteDialog id={issue?.id} />
-                  </Table.Cell>
+                  <>
+                    <Table.RowHeaderCell>
+                      <Text className="flex items-center h-full">{issue?.id}</Text>
+                    </Table.RowHeaderCell>
+                    <Table.Cell>
+                      <Text className="flex items-center h-full">{issue?.title}</Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text className="flex items-center h-full">{issue?.description}</Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Flex className="items-center h-full">
+                        <Badge color={issue?.status == "OPEN" ? "blue" : "green"}>{issue?.status}</Badge>
+                      </Flex>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <CloseIssue {...issue} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text className="flex items-center h-full" title={moment(issue?.createdAt).format("LLLL UTCZ")}>
+                        {moment(issue?.createdAt).format("L LT")}
+                      </Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text className="flex items-center h-full" title={moment(issue?.updatedAt).format("LLLL UTCZ")}>
+                        {moment(issue?.updatedAt).format("L LT")}
+                      </Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <EditDialog {...issue} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <DeleteDialog id={issue?.id} />
+                    </Table.Cell>
+                  </>
                 </Table.Row>
               );
             })}
           </Table.Body>
         </Table.Root>
-      ) : null}
+      ) : (
+        <div className="w-full ml-4 mb-4">
+          <Spinner />
+        </div>
+      )}
       <Button>
         <Link href="/issues/new">New Issue</Link>
       </Button>
