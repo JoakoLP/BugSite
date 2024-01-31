@@ -12,8 +12,9 @@ const DeleteDialog = (props: Props) => {
   const router = useRouter();
 
   const onConfirm = () => {
-    dbFunctions.deleteIssue(props?.id);
-    router.push("/");
+    dbFunctions.deleteIssue(props?.id).then(() => {
+      window.location.reload();
+    });
   };
 
   return (
@@ -23,9 +24,11 @@ const DeleteDialog = (props: Props) => {
           <GoTrash />
         </Button>
       </AlertDialog.Trigger>
+
       <AlertDialog.Content>
         <AlertDialog.Title>Delete Issue</AlertDialog.Title>
-        <AlertDialog.Description>This issue is going to be deleted.</AlertDialog.Description>
+        <AlertDialog.Description>This issue 'id: {props?.id}' is going to be deleted.</AlertDialog.Description>
+
         <Flex gap="3" mt="4" justify="end">
           <AlertDialog.Cancel>
             <Button variant="soft" color="gray">
